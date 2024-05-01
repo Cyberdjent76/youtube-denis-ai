@@ -70,7 +70,8 @@ if youtube_url:
         with st.spinner(text="Denis is thinking..."):
             url = "https://api-d7b62b.stack.tryrelevance.com/latest/studios/891bd682-3f71-4f29-8536-d86c499cdf5b/trigger_limited"
             headers = {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Accept": "application/json"
             }
             payload = {
                 "params": {
@@ -82,7 +83,10 @@ if youtube_url:
             response = requests.post(url, headers=headers, data=json.dumps(payload))
             # spinner end
             # st.success('Done!')
-            return response.json()["output"]["answer"]
+            if response.status_code == 200:
+                return response.json()["output"]["answer"]
+            else:
+                return f"Error {response.status_code}: {response.text}"
 
     if 'messages' not in st.session_state:
         st.session_state.messages = []
